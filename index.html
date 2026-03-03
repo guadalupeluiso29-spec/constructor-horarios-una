@@ -1,65 +1,92 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Constructor de Horarios - UNA DAV</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-body { font-family: Arial; margin: 20px; }
-h1 { margin-bottom: 10px; }
+  <meta charset="UTF-8">
+  <title>Constructor de Horarios UNA</title>
 
-.controls { margin-bottom: 20px; }
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-.calendar {
-  display: grid;
-  grid-template-columns: 80px repeat(6, 1fr);
-  grid-auto-rows: 50px;
-  border: 1px solid #ccc;
-  position: relative;
-}
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
 
-.header, .time {
-  background: #f2f2f2;
-  border: 1px solid #ddd;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-}
+    h1 {
+      margin-bottom: 10px;
+    }
 
-.cell { border:1px solid #eee; position:relative; }
+    .controls {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.event {
-  position:absolute;
-  background:#111;
-  color:white;
-  font-size:11px;
-  padding:4px;
-  border-radius:4px;
-  width:90%;
-  left:5%;
-  cursor:pointer;
-}
+    input, select, button {
+      padding: 8px;
+      font-size: 14px;
+    }
 
-button {
-  padding:8px 12px;
-  cursor:pointer;
-}
-</style>
+    #calendar {
+      position: relative;
+      display: grid;
+      grid-template-columns: 80px repeat(6, 1fr);
+      border: 1px solid #ccc;
+      background: white;
+    }
+
+    .header {
+      background: #111;
+      color: white;
+      padding: 5px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .time {
+      border-top: 1px solid #eee;
+      padding: 5px;
+      font-size: 12px;
+    }
+
+    .cell {
+      border: 1px solid #eee;
+      height: 50px;
+    }
+
+    .event {
+      position: absolute;
+      background: #111;
+      color: white;
+      padding: 5px;
+      font-size: 11px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 13%;
+      overflow: hidden;
+    }
+
+    .event:hover {
+      opacity: 0.8;
+    }
+
+  </style>
 </head>
 <body>
 
-<h1>Constructor de Horarios UNA DAV</h1>
+  <h1>Constructor de Horarios - UNA DAV</h1>
 
-<div class="controls">
-  <input type="text" id="search" placeholder="Buscar materia...">
-  <button onclick="descargarImagen()">Descargar horario (PNG)</button>
-</div>
+  <div class="controls">
+    <input type="text" id="search" placeholder="Buscar materia...">
+    <button onclick="descargarImagen()">Descargar mi horario</button>
+  </div>
 
-<div id="calendar" class="calendar"></div>
+  <div id="calendar"></div>
 
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script src="app.js"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
