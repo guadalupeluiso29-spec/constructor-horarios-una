@@ -53,7 +53,7 @@ function generarGrilla() {
 }
 
 function cargarDatos() {
-    fetch("comisiones.json")
+    fetch("oferta2026.json")
         .then(function (response) {
             if (!response.ok) {
                 throw new Error("Error HTTP: " + response.status);
