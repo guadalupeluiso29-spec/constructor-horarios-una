@@ -2,151 +2,126 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Constructor de Horarios UNA</title>
+<title>Constructor de Horarios</title>
 
 <style>
-body { margin:0; font-family:Arial; display:flex; height:100vh; }
-.sidebar { width:320px; border-right:1px solid #ccc; padding:15px; overflow-y:auto; background:#f7f7f7; }
-.sidebar select, .sidebar button { width:100%; margin-bottom:10px; padding:6px; }
-.calendar-container { flex:1; padding:20px; overflow:auto; }
-#calendar { position:relative; display:grid; grid-template-columns:80px repeat(6,1fr); border:1px solid #ccc; }
-.header { background:black; color:white; text-align:center; padding:5px; font-size:12px; }
-.time { font-size:12px; padding:4px; border-top:1px solid #eee; }
-.cell { border:1px solid #eee; height:50px; }
-.event { position:absolute; background:#e63946; color:white; padding:4px; font-size:11px; border-radius:4px; width:13%; overflow:hidden; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  height: 100vh;
+}
+
+#sidebar {
+  width: 300px;
+  background: #f4f4f4;
+  padding: 15px;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+}
+
+#sidebar h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#sidebar button {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+  padding: 6px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: white;
+}
+
+#main {
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  text-align: center;
+  height: 40px;
+  position: relative;
+}
+
+th {
+  background: #eee;
+}
+
+.bloque {
+  background: lightblue;
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
+}
 </style>
 </head>
+
 <body>
 
-<div class="sidebar">
-  <h3>Filtros</h3>
-  <select id="materiaSelect"><option value="">Seleccionar materia</option></select>
-  <select id="sedeSelect" disabled><option value="">Seleccionar sede</option></select>
-  <select id="catedraSelect" disabled><option value="">Seleccionar cátedra</option></select>
-  <button id="agregarBtn" disabled>Agregar comisión</button>
+<div id="sidebar">
+  <h2>Materias</h2>
+  <div id="listaMaterias"></div>
+
+  <h3>Comisiones</h3>
+  <div id="listaComisiones"></div>
 </div>
 
-<div class="calendar-container">
-  <div id="calendar"></div>
+<div id="main">
+  <h2>Horario</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Hora</th>
+        <th>LUNES</th>
+        <th>MARTES</th>
+        <th>MIERCOLES</th>
+        <th>JUEVES</th>
+        <th>VIERNES</th>
+        <th>SABADO</th>
+      </tr>
+    </thead>
+    <tbody id="tablaHorario">
+    </tbody>
+  </table>
 </div>
 
 <script>
+const dias = ["LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO"]
+const inicio = 8
+const fin = 23
 
-const dias = ["LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO"];
-const inicioDia = 8;
-const finDia = 23;
+const tbody = document.getElementById("tablaHorario")
 
-let comisiones = [];
-let seleccionadas = [];
+for (let hora = inicio; hora <= fin; hora++) {
+  const tr = document.createElement("tr")
 
-const calendar = document.getElementById("calendar");
-const materiaSelect = document.getElementById("materiaSelect");
-const sedeSelect = document.getElementById("sedeSelect");
-const catedraSelect = document.getElementById("catedraSelect");
-const agregarBtn = document.getElementById("agregarBtn");
+  const tdHora = document.createElement("td")
+  tdHora.textContent = hora + ":00"
+  tr.appendChild(tdHora)
 
-function crearGrilla(){
-  calendar.innerHTML="";
-  calendar.appendChild(div("","header"));
-  dias.forEach(d=>calendar.appendChild(div(d,"header")));
-  for(let h=inicioDia;h<=finDia;h++){
-    calendar.appendChild(div(h+":00","time"));
-    dias.forEach(()=>calendar.appendChild(div("","cell")));
-  }
+  dias.forEach(dia => {
+    const td = document.createElement("td")
+    td.setAttribute("data-dia", dia)
+    td.setAttribute("data-hora", hora)
+    tr.appendChild(td)
+  })
+
+  tbody.appendChild(tr)
 }
-function div(t,c){ const d=document.createElement("div"); d.className=c; d.textContent=t; return d; }
-
-fetch("comisiones.json")
-.then(r=>r.json())
-.then(data=>{
-  comisiones=data;
-  cargarMaterias();
-});
-
-function cargarMaterias(){
-  const materias=[...new Set(comisiones.map(c=>c.materia))];
-  materias.forEach(m=>{
-    const o=document.createElement("option");
-    o.value=m; o.textContent=m;
-    materiaSelect.appendChild(o);
-  });
-}
-
-materiaSelect.onchange=()=>{
-  sedeSelect.disabled=false;
-  sedeSelect.innerHTML='<option value="">Seleccionar sede</option>';
-  catedraSelect.innerHTML='<option value="">Seleccionar cátedra</option>';
-  agregarBtn.disabled=true;
-  const filtradas=comisiones.filter(c=>c.materia===materiaSelect.value);
-  [...new Set(filtradas.map(c=>c.sede))].forEach(s=>{
-    const o=document.createElement("option");
-    o.value=s; o.textContent=s;
-    sedeSelect.appendChild(o);
-  });
-};
-
-sedeSelect.onchange=()=>{
-  catedraSelect.disabled=false;
-  catedraSelect.innerHTML='<option value="">Seleccionar cátedra</option>';
-  agregarBtn.disabled=true;
-  const filtradas=comisiones.filter(c=>
-    c.materia===materiaSelect.value &&
-    c.sede===sedeSelect.value
-  );
-  [...new Set(filtradas.map(c=>c.catedra))].forEach(ca=>{
-    const o=document.createElement("option");
-    o.value=ca; o.textContent=ca;
-    catedraSelect.appendChild(o);
-  });
-};
-
-catedraSelect.onchange=()=> agregarBtn.disabled=false;
-
-agregarBtn.onclick=()=>{
-  const c=comisiones.find(x=>
-    x.materia===materiaSelect.value &&
-    x.sede===sedeSelect.value &&
-    x.catedra===catedraSelect.value
-  );
-  if(!c) return;
-  if(haySuperposicion(c)) alert("⚠️ Se superpone con otra comisión.");
-  seleccionadas.push(c);
-  renderEventos();
-};
-
-function haySuperposicion(nueva){
-  return seleccionadas.some(sel=>{
-    return nueva.bloques.some(nb=>{
-      return sel.bloques.some(sb=>{
-        if(nb.dia!==sb.dia) return false;
-        return nb.inicio<sb.fin && nb.fin>sb.inicio;
-      });
-    });
-  });
-}
-
-function renderEventos(){
-  document.querySelectorAll(".event").forEach(e=>e.remove());
-  seleccionadas.forEach(c=>{
-    c.bloques.forEach(b=>{
-      const diaIndex=dias.indexOf(b.dia);
-      if(diaIndex===-1) return;
-      const top=(b.inicio-inicioDia)*50;
-      const height=(b.fin-b.inicio)*50;
-      const left=80+diaIndex*(calendar.offsetWidth-80)/6;
-      const e=document.createElement("div");
-      e.className="event";
-      e.style.top=top+"px";
-      e.style.height=height+"px";
-      e.style.left=left+"px";
-      e.innerHTML=`${c.materia}<br>${c.catedra}`;
-      calendar.appendChild(e);
-    });
-  });
-}
-
-crearGrilla();
-
 </script>
+
+<script src="app.js"></script>
+
 </body>
 </html>
