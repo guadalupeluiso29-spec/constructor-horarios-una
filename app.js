@@ -2,10 +2,21 @@ let comisiones = []
 let seleccionadas = []
 
 fetch("comisiones.json")
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("No se pudo cargar comisiones.json")
+    }
+    return res.json()
+  })
   .then(data => {
+    console.log("JSON cargado correctamente")
     comisiones = data
     cargarMaterias()
+  })
+  .catch(error => {
+    console.error("Error cargando JSON:", error)
+    document.getElementById("listaMaterias").innerHTML =
+      "<p style='color:red'>Error cargando comisiones.json</p>"
   })
 
 function cargarMaterias() {
@@ -37,28 +48,8 @@ function mostrarComisiones(materia) {
 }
 
 function agregarAlHorario(comision) {
-  if (haySuperposicion(comision)) {
-    alert("Se superpone con otra materia")
-    return
-  }
-
   seleccionadas.push(comision)
   renderizarHorario()
-}
-
-function haySuperposicion(nueva) {
-  for (let existente of seleccionadas) {
-    for (let b1 of existente.bloques) {
-      for (let b2 of nueva.bloques) {
-        if (b1.dia === b2.dia) {
-          if (!(b2.fin <= b1.inicio || b2.inicio >= b1.fin)) {
-            return true
-          }
-        }
-      }
-    }
-  }
-  return false
 }
 
 function renderizarHorario() {
