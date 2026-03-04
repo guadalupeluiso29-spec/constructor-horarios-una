@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Armador de Horarios</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+}
+
+#sidebar {
+    width: 30%;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+}
+
+#main {
+    width: 70%;
+    padding: 20px;
+    overflow: auto;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.materia {
+    cursor: pointer;
+    padding: 6px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+}
+
+.materia:hover {
+    background-color: #f0f0f0;
+}
+
+.comision {
+    margin-left: 10px;
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid #eee;
+    margin-bottom: 4px;
+    background-color: #fafafa;
+}
+
+.comision:hover {
+    background-color: #e0e0ff;
+}
+
+#error {
+    color: red;
+    margin-top: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    text-align: center;
+    height: 40px;
+    font-size: 12px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.bloque {
+    color: white;
+    font-size: 11px;
+}
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h2>Materias</h2>
+    <input type="text" id="buscador" placeholder="Buscar materia...">
+    <div id="materias"></div>
+    <div id="error"></div>
+</div>
+
+<div id="main">
+    <h2>Horario</h2>
+    <div id="grilla"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
